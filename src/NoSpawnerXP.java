@@ -25,6 +25,15 @@ public class NoSpawnerXP extends Plugin {
     public void enable() {
         if (OBlock.p[52] instanceof SpawnerPatch) {
             LOG.info("[NoSpawnerXP] Patch already applied.");
+        } else if (SpawnerPatch.class.getClassLoader() !=
+                OBlockMobSpawner.class.getClassLoader()) {
+            LOG.info("[NoSpawnerXP] Not applying patch, injection failed.");
+            etc.getServer().addToServerQueue(new Runnable() {
+                @Override
+                public void run() {
+                    etc.getLoader().disablePlugin("NoSpawnerXP");
+                }
+            });
         } else {
             LOG.info("[NoSpawnerXP] Applying patch...");
             OBlock.p[52] = null; // Unset current mob spawner block
