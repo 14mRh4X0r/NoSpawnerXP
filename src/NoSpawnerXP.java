@@ -3,6 +3,24 @@ import java.util.logging.Logger;
 public class NoSpawnerXP extends Plugin {
     private static final Logger LOG = Logger.getLogger("Minecraft.NoSpawnerXP");
 
+    static {
+        LOG.info("[NoSpawnerXP] Injecting patch into proper classloader...");
+        // Some magic to make sure SpawnerPatch can call super.
+        // This assumes the class loader is an URLClassLoader.
+        try {
+            ClassLoader cl = OBlockMobSpawner.class.getClassLoader();
+            java.lang.reflect.Method m = java.net.URLClassLoader.class
+                .getDeclaredMethod("addURL", java.net.URL.class);
+            m.setAccessible(true);
+            m.invoke(cl, new java.io.File("plugins/NoSpawnerXP.jar").toURI()
+                    .toURL());
+            cl.loadClass("NoSpawnerXP$SpawnerPatch");
+        } catch (Exception e) {
+            LOG.log(java.util.logging.Level.SEVERE,
+                    "[NoSpawnerXP] Exception while injecting patch:", e);
+        }
+    }
+
     @Override
     public void enable() {
         if (OBlock.p[52] instanceof SpawnerPatch) {
@@ -10,22 +28,6 @@ public class NoSpawnerXP extends Plugin {
         } else {
             LOG.info("[NoSpawnerXP] Applying patch...");
             OBlock.p[52] = null; // Unset current mob spawner block
-
-            // Some magic to make sure SpawnerPatch can call super.
-            // This assumes the class loader is an URLClassLoader.
-            try {
-                ClassLoader cl = OBlockMobSpawner.class.getClassLoader();
-                java.lang.reflect.Method m = java.net.URLClassLoader.class
-                    .getDeclaredMethod("addURL", java.net.URL.class);
-                m.setAccessible(true);
-                m.invoke(cl, new java.io.File("plugins/NoSpawnerXP.jar").toURI()
-                        .toURL());
-                cl.loadClass("NoSpawnerXP$SpawnerPatch");
-            } catch (Exception e) {
-                LOG.log(java.util.logging.Level.SEVERE,
-                        "[NoSpawnerXP] Exception while applying patch:", e);
-            }
-
             new SpawnerPatch(); // Actual patch
         }
         LOG.info("NoSpawnerXP enabled.");
