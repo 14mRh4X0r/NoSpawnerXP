@@ -23,7 +23,7 @@ public class NoSpawnerXP extends Plugin {
 
     @Override
     public void enable() {
-        if (OBlock.p[52] instanceof SpawnerPatch) {
+        if (OBlock.r[52] instanceof SpawnerPatch) {
             LOG.info("[NoSpawnerXP] Patch already applied.");
         } else if (SpawnerPatch.class.getClassLoader() !=
                 OBlockMobSpawner.class.getClassLoader()) {
@@ -36,7 +36,7 @@ public class NoSpawnerXP extends Plugin {
             });
         } else {
             LOG.info("[NoSpawnerXP] Applying patch...");
-            OBlock.p[52] = null; // Unset current mob spawner block
+            OBlock.r[52] = null; // Unset current mob spawner block
             new SpawnerPatch(); // Actual patch
         }
         LOG.info("NoSpawnerXP enabled.");
@@ -51,16 +51,16 @@ public class NoSpawnerXP extends Plugin {
     public static class SpawnerPatch extends OBlockMobSpawner {
 
         public SpawnerPatch() {
-            super(52, 65);
-            c(5.0F).a(OBlock.i).b("mobSpawner").D();
+            super(52);
+            c(5.0F).a(OBlock.k).c("mobSpawner").D();
         }
 
         @Override
-        protected void f(OWorld oworld, int i, int j, int k, int l) {
+        protected void j(OWorld oworld, int i, int j, int k, int l) {
             // Check whether we're enabled.
             Plugin p = etc.getLoader().getPlugin("NoSpawnerXP");
             if (p == null || !p.isEnabled()) {
-                super.f(oworld, i, j, k, l);
+                super.j(oworld, i, j, k, l);
             }
         }
     }
