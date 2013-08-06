@@ -23,7 +23,7 @@ public class NoSpawnerXP extends Plugin {
 
     @Override
     public void enable() {
-        if (OBlock.r[52] instanceof SpawnerPatch) {
+        if (OBlock.s[52] instanceof SpawnerPatch) {
             LOG.info("[NoSpawnerXP] Patch already applied.");
         } else if (SpawnerPatch.class.getClassLoader() !=
                 OBlockMobSpawner.class.getClassLoader()) {
@@ -36,7 +36,7 @@ public class NoSpawnerXP extends Plugin {
             });
         } else {
             LOG.info("[NoSpawnerXP] Applying patch...");
-            OBlock.r[52] = null; // Unset current mob spawner block
+            OBlock.s[52] = null; // Unset current mob spawner block
             new SpawnerPatch(); // Actual patch
         }
         LOG.info("NoSpawnerXP enabled.");
@@ -52,7 +52,7 @@ public class NoSpawnerXP extends Plugin {
 
         public SpawnerPatch() {
             super(52);
-            c(5.0F).a(OBlock.k).c("mobSpawner").D();
+            c(5.0F).a(OBlock.l).c("mobSpawner").C().d("mob_spawner");
         }
 
         @Override
